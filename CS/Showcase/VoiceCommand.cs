@@ -88,7 +88,11 @@ namespace Showcase
                 SpeechRecognitionResult result = await _speechRecognizer.RecognizeAsync();
                 SetLed(GpioPinValue.Low);
 
-                if (result.Status != SpeechRecognitionResultStatus.Success || String.IsNullOrEmpty(result.Text))
+                if (result.Status == SpeechRecognitionResultStatus.MicrophoneUnavailable)
+                {
+                    new TextToSpeech($"No microphone found.").Play();
+                }
+                else if (result.Status != SpeechRecognitionResultStatus.Success || String.IsNullOrEmpty(result.Text))
                 {
                     Debug.WriteLine($"Recognition failed: {result.Status} - {result.Text}");
                     ShowHelp("Sorry, didn't catch that.");
